@@ -18,7 +18,7 @@ public class ClientMain {
 
     public void init() {
         System.out.println("Iniciando cliente.");
-        // TODO: Implementar
+
         client.connect();
 
         String str;
@@ -27,23 +27,47 @@ public class ClientMain {
         //manda msg pro servidor e o servidor printa no console
         while(!client.isClosed()){
             str = sc.nextLine();
-            if(str.toLowerCase(Locale.ROOT).equals("exit")) break;
             client.send(str);
+            if(str.toLowerCase(Locale.ROOT).equals("sair")) break;
         }
         client.close();
+        sc.close();
+    }
 
+    public int requestId() {
+        System.out.println("Pedindo ID para o server");
+        client.connect();
+        synchronized(client) {
+            try {
+                client.wait();
+            } catch (InterruptedException e) {}
+        }
+        System.out.println("ID de valor: " + client.getId() + " recebido");
+        client.close(4000);
+        return client.getId();
     }
 
     public static void main(String[] args) {
-        /*
-           FIXME: ID criado dinâmicamente na conexão, usar attachment para identificar cliente.
-           Remover resource descriptor?
-        */
-        String removeMe = "ws://localhost:8080/idCliente";
+        int id = 0;
+        // String removeMe = "ws://localhost:8080/idCliente";
 
+        // Primeiro se conecta ao servidor para pedir um id
         try {
-            URI uri = new URI(removeMe);
+            URI uri = new URI("ws://localhost:8080/getId");
             Client client = new Client(uri);
+
+            ClientMain main = new ClientMain(client);
+
+            id = main.requestId();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        // Conecta com o id adquirido
+        try {
+            URI uri = new URI("ws://localhost:8080/" + Integer.toString(id));
+            Client client = new Client(uri);
+            client.setId(id);
 
             ClientMain main = new ClientMain(client);
 

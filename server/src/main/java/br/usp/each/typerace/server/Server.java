@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.*;
 
 public class Server extends WebSocketServer {
@@ -28,9 +27,13 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        ByteBuffer id = assignId();
-        conn.send(id); // Manda o id para o cliente
-        conn.setAttachment(id.getInt(0)); 
+        if(conn.getResourceDescriptor().equals("/getId")) {
+            ByteBuffer id = assignId();
+            conn.send(id); // Manda o id para o cliente
+            return;
+        }
+        
+        conn.setAttachment(resourceDescriptorToInt(conn.getResourceDescriptor()));
         conn.send( "Bem vindo ao servidor!" ); //This method sends a message to the new client
         broadcast( "Nova conexao de jogador de id: " + conn.getAttachment() +
                 "\nJogadores conectados: " + (++counter) ); //This method sends a message to all clients connected
@@ -43,6 +46,10 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        if(conn.getResourceDescriptor().equals("/getId")) {
+            return;
+        }
+
         int id = conn.getAttachment();
         idList.remove(Integer.valueOf(id));
         connections.remove(conn.getAttachment());
@@ -124,7 +131,6 @@ public class Server extends WebSocketServer {
         
             "\n\nPara iniciar o jogo, digite <start>\n" +
             "Para sair antes do inicio do jogo, digite <sair>\n" +
-            "Para sair, digite <exit>\n" +
             "Para conversar com outros usuarios, digite a mensagem\n\n"
             
         );
@@ -143,4 +149,9 @@ public class Server extends WebSocketServer {
         broadcast("========================================");
     }
 
+    // Devolve o id guardado no resource descriptor em forma de int
+    public int resourceDescriptorToInt(String rd) {
+        rd = rd.substring(1, rd.length()); // Remove o /
+        return Integer.parseInt(rd);
+    }   
 }

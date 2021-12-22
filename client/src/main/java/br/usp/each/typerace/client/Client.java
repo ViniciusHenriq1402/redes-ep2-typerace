@@ -27,14 +27,16 @@ public class Client extends WebSocketClient {
     @Override
     public void onMessage(ByteBuffer message) {
         id = message.getInt(0);
-        
-        System.out.println("O ID do cliente é: " + id);
+        synchronized(this) {
+            this.notify();
+        }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Conexao fechada com codigo de saida " + code + " Info adicional: " + reason);
-        System.exit(0);
+        // Caso a conexao fechada era para pedir um ID nao printe
+        if(code != 4000)
+            System.out.println("Conexao fechada com codigo de saida " + code + " Info adicional: " + reason);
     }
 
     @Override
@@ -45,6 +47,10 @@ public class Client extends WebSocketClient {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }
