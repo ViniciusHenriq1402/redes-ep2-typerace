@@ -33,15 +33,15 @@ public class Server extends WebSocketServer {
             return;
         }
         
-        conn.setAttachment(resourceDescriptorToInt(conn.getResourceDescriptor()));
         conn.send( "Bem vindo ao servidor!" ); //This method sends a message to the new client
-        broadcast( "Nova conexao de jogador de id: " + conn.getAttachment() +
+        broadcast( "Nova conexao de jogador de id: " + resourceDescriptorToInt(conn.getResourceDescriptor()) +
                 "\nJogadores conectados: " + (++counter) ); //This method sends a message to all clients connected
         System.out.println( "Nova conexao em " + conn.getRemoteSocketAddress() );
-        connections.put( conn.getAttachment(), conn );
+        connections.put( resourceDescriptorToInt(conn.getResourceDescriptor()), conn );
 
         sendInstructions(conn);
-        players.put(conn.getAttachment(), new Player(conn.getAttachment(), typeraceGame.getWords()));
+        players.put(resourceDescriptorToInt(conn.getResourceDescriptor()),
+            new Player(resourceDescriptorToInt(conn.getResourceDescriptor()), typeraceGame.getWords()));
     }
 
     @Override
@@ -50,15 +50,15 @@ public class Server extends WebSocketServer {
             return;
         }
 
-        int id = conn.getAttachment();
+        int id = resourceDescriptorToInt(conn.getResourceDescriptor());
         idList.remove(Integer.valueOf(id));
-        connections.remove(conn.getAttachment());
+        connections.remove(resourceDescriptorToInt(conn.getResourceDescriptor()));
         System.out.println( "Jogador de id: " + id +
                 " desconectou com codigo " + code + ". Info adicional: " + reason );
         broadcast( "Jogador de id: " + id + " desconectou" +
                 "\nJogadores conectados: " + (--counter) );
 
-        players.remove(conn.getAttachment());
+        players.remove(resourceDescriptorToInt(conn.getResourceDescriptor()));
     }
 
     @Override
@@ -80,12 +80,12 @@ public class Server extends WebSocketServer {
             }
 
             else
-                broadcast("Cliente " + conn.getAttachment() + " : " + message);
+                broadcast("Cliente " + resourceDescriptorToInt(conn.getResourceDescriptor()) + " : " + message);
         }
 
         if (gameStarted && !messageLower.isEmpty()) {
 
-            Player pl = players.get(conn.getAttachment());
+            Player pl = players.get(resourceDescriptorToInt(conn.getResourceDescriptor()));
             if (pl.wordTyped(messageLower) == true){
 
                 broadcast("=== GAME OVER ===");
@@ -100,8 +100,8 @@ public class Server extends WebSocketServer {
     public void onError(WebSocket conn, Exception ex) {
         System.err.println( "Um erro ocorreu em " + conn.getRemoteSocketAddress()  + ":" + ex);
 
-        connections.remove(conn.getAttachment());
-        players.remove(conn.getAttachment());
+        connections.remove(resourceDescriptorToInt(conn.getResourceDescriptor()));
+        players.remove(resourceDescriptorToInt(conn.getResourceDescriptor()));
     }
 
     @Override
