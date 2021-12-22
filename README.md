@@ -43,9 +43,11 @@ ou
 * Regras do Jogo
 
   *	Envie uma palavra por vez <br>
-  *	Não há ordem específica para enviar palavras<br>
-  *	Palavras podem ser maiúsculas ou minúsculas<br>
-  *	Palavras erradas não tiram ponto<br><br>
+  *	Não há ordem específica para enviar palavras <br>
+  *	Palavras podem ser maiúsculas ou minúsculas <br>
+  *	Palavras erradas não tiram ponto <br>
+  *	O jogo termina quando um jogador digitar todas as palavras corretamente <br>
+  *	Jogador com mais palavras corretamente digitadas vence o jogo <br><br>
   
   
 * Comandos
