@@ -34,7 +34,7 @@ public class Server extends WebSocketServer {
         conn.send( "Bem vindo ao servidor!" ); //This method sends a message to the new client
         broadcast( "Nova conexao de jogador de id: " + conn.getAttachment() +
                 "\nJogadores conectados: " + (++counter) ); //This method sends a message to all clients connected
-        System.out.println( "new connection to " + conn.getRemoteSocketAddress() );
+        System.out.println( "Nova conexao em " + conn.getRemoteSocketAddress() );
         connections.put( conn.getAttachment(), conn );
 
         sendInstructions(conn);
@@ -47,7 +47,7 @@ public class Server extends WebSocketServer {
         idList.remove(Integer.valueOf(id));
         connections.remove(conn.getAttachment());
         System.out.println( "Jogador de id: " + id +
-                " desconectou com codigo " + code + " info adicional: " + reason );
+                " desconectou com codigo " + code + ". Info adicional: " + reason );
         broadcast( "Jogador de id: " + id + " desconectou" +
                 "\nJogadores conectados: " + (--counter) );
 
@@ -62,7 +62,7 @@ public class Server extends WebSocketServer {
         if (!gameStarted){
             if (messageLower.equals("start")){
                 messageLower = "";
-                broadcast("GAME START");
+                broadcast("=== GAME START ===");
                 gameStarted = true;
                 broadcast("PALAVRAS : " + typeraceGame.getSentence());  
                 typeraceGame.countTime();                
@@ -81,7 +81,7 @@ public class Server extends WebSocketServer {
             Player pl = players.get(conn.getAttachment());
             if (pl.wordTyped(messageLower) == true){
 
-                broadcast("GAME OVER");
+                broadcast("=== GAME OVER ===");
                 gameStarted = false;
                 typeraceGame.stopTime();
                 broadcastStatics();
@@ -123,6 +123,7 @@ public class Server extends WebSocketServer {
         conn.send(
         
             "\n\nPara iniciar o jogo, digite <start>\n" +
+            "Para sair antes do inicio do jogo, digite <sair>\n" +
             "Para sair, digite <exit>\n" +
             "Para conversar com outros usuarios, digite a mensagem\n\n"
             
@@ -130,7 +131,7 @@ public class Server extends WebSocketServer {
     }
 
     public void broadcastStatics(){
-        broadcast("========================================");
+        broadcast("\n\n========================================");
         broadcast("Duracao da partida : " + typeraceGame.timeElapsedSeconds() + "s\n");
 
         broadcast("Ranking :");

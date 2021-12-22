@@ -16,7 +16,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("New connection opened");
+        System.out.println("Nova conexao aberta");
     }
 
     @Override
@@ -33,13 +33,13 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Closed with exit code " + code + " additional info: " + reason);
+        System.out.println("Conexao fechada com codigo de saida " + code + " Info adicional: " + reason);
         System.exit(0);
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("An error occurred:" + ex);
+        System.err.println("Ocorreu um erro:" + ex);
         System.exit(1);
     }
 
