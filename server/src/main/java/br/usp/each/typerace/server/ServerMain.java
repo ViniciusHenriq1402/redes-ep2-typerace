@@ -12,6 +12,7 @@ public class ServerMain {
         this.server = server;
     }
 
+    // Inicia o servidor
     public void init() {
         System.out.println("Iniciando servidor...");
         server.run();

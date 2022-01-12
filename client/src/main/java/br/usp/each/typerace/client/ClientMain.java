@@ -1,8 +1,5 @@
 package br.usp.each.typerace.client;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
@@ -19,37 +16,38 @@ public class ClientMain {
     public void init() {
         System.out.println("Iniciando cliente.");
 
-        client.connect();
+        client.connect(); // Conecta com o servidor
 
         String str;
         Scanner sc = new Scanner(System.in);
 
-        //manda msg pro servidor e o servidor printa no console
+        // Manda mensagem para o servidor e a printa no console
         while(!client.isClosed()){
             str = sc.nextLine();
             client.send(str);
             if(str.toLowerCase(Locale.ROOT).equals("sair")) break;
         }
-        client.close();
+
+        client.close(1000);
         sc.close();
     }
 
     public int requestId() {
         System.out.println("Pedindo ID para o server");
-        client.connect();
+        client.connect(); // Conecta com o servidor
+        // Aguarda o id ser recebido
         synchronized(client) {
             try {
                 client.wait();
             } catch (InterruptedException e) {}
         }
         System.out.println("ID de valor: " + client.getId() + " recebido");
-        client.close(4000);
+        client.close(4000); // Fecha conexão com um exit code alternativo 
         return client.getId();
     }
 
     public static void main(String[] args) {
         int id = 0;
-        // String removeMe = "ws://localhost:8080/idCliente";
 
         // Primeiro se conecta ao servidor para pedir um id
         try {

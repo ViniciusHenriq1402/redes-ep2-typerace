@@ -53,5 +53,4 @@ ou
 * Comandos
 
   *	Digite "start" para começar<br>
-  *	Digite "sair" para sair antes do jogo iniciar<br>
-  *	Digite "exit" para sair a qualquer hora<br>
+  *	Digite "sair" para desconectar<br>
