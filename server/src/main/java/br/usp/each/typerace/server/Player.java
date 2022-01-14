@@ -33,6 +33,16 @@ public class Player implements Comparable<Player> {
         return this.wrong;
     }
 
+    // Método que define a quantidade de acertos do jogador
+    public void setCorrect(int correct){
+        this.correct = correct;
+    }
+    
+    // Método que define a quantidade de erros do jogador	
+    public void setWrong(int wrong){
+        this.wrong = wrong;
+    }
+
     // Método que verifica se a palavra digitada está correta
     public boolean wordTyped(String word){
 

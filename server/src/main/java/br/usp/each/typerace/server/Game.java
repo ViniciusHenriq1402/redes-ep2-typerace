@@ -1,21 +1,59 @@
 package br.usp.each.typerace.server;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class Game {
 
     private long timeStart;
     private long timeFinish;
-    private String sentence = "the size and age of the cosmos are beyond ordinary human understanding lost somewhere between immensity eternity is our tiny planetary home";
+    private String sentence;
+    private String backupSentence = "the size and age of the cosmos are beyond ordinary human understanding lost somewhere between immensity eternity is our tiny planetary home";
     private List<String> words;
 
     // Cria lista de palavras a partir de string sentence, quando o jogo é iniciado
     public Game(){
-        words = new ArrayList<String>(Arrays.asList(this.sentence.split(" ")));
+        words = new ArrayList<String>();
+        // Caso haja erro randomizando as palavras use a frase de backup:
+        if(!randomizeWords()) {
+            words = Arrays.asList(this.backupSentence.split(" "));
+            sentence = backupSentence;
+        }
+    }
+
+    // Método que randomiza a lista de palavras (retorna false caso o API de timeout)
+    private Boolean randomizeWords(){
+        Random rand = new Random();
+        int numberOfWords = rand.nextInt(11) + 20;
+
+        try {
+            // Pega i palavras aleatórias do arquivo lista_de_palavras.txt e as adiciona na lista de palavras
+            for(int i = 0; i < numberOfWords; i++) {
+                File textFile = new File("../lista_de_palavras.txt");
+                Scanner fileScanner = new Scanner(textFile);
+                int line = rand.nextInt(370103); int n = 0;
+
+                while(n < line) {
+                    fileScanner.nextLine();
+                    n++;
+                }
+
+                words.add(fileScanner.nextLine());
+                fileScanner.close();
+            }
+        } catch (FileNotFoundException e) {
+            return false; // Caso não encontre o arquivo retorna false
+        }
+
+        // Junta todas as palavras em uma String
+        sentence = words.get(0);
+        for(int i = 1; i < words.size(); i++) {
+            sentence += " " + words.get(i);
+        }
+
+        return true;
     }
 
     // Método que retorna a lista de palavras a ser digitado
@@ -23,7 +61,7 @@ public class Game {
         return words;
     }
 
-    // Método que retorna o string de palavras
+    // Método que retorna a string de palavras
     public String getSentence(){
         return sentence;
     }
@@ -36,6 +74,11 @@ public class Game {
     // Método que finaliza a contagem de tempo
     public void stopTime(){
         timeFinish = System.currentTimeMillis();
+        // Re-randomiza as palavras para o próximo jogo
+        if(!randomizeWords()) {
+            words = Arrays.asList(this.backupSentence.split(" "));
+            sentence = backupSentence;
+        }
     }
 
     // Método que calcula o tempo decorrido em segundos

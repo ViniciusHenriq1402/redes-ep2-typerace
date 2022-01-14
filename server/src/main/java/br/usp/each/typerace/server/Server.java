@@ -6,8 +6,6 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.*;
 
 public class Server extends WebSocketServer {
@@ -164,6 +162,7 @@ public class Server extends WebSocketServer {
         int i = 0;
         for (Player pl : rankedPl){
             broadcast((++i) + ") " + "Jogador " + pl.getId() + " : " + pl.getCorrect() + " corretas, " + pl.getWrong() + " erradas");
+            pl.setCorrect(0); pl.setWrong(0); // Reseta pontuação dos jogadores para próxima partida
         }
         broadcast("========================================");
     }
