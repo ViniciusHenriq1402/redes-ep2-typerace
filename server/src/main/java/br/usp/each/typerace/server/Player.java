@@ -1,5 +1,6 @@
 package br.usp.each.typerace.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -8,14 +9,14 @@ public class Player implements Comparable<Player> {
     private final Integer id;
     private int correct;
     private int wrong;
-    public List<String> wordsRemaining;
+    public ArrayList<String> wordsRemaining = new ArrayList<>();
 
 
     public Player (Integer id, List<String> words){
         this.id = id;
         this.correct = 0;
         this.wrong = 0;
-        this.wordsRemaining = words;
+        copyWords(words);
     }
 
     // Método que retorna id do jogador
@@ -55,6 +56,13 @@ public class Player implements Comparable<Player> {
         }
 
         return playerStatus();
+    }
+
+    // Método que limpa wordsRemaining e copia novas palavras
+    public void copyWords(List<String> words) {
+        if(wordsRemaining.size() != 0)
+            wordsRemaining.clear();
+        wordsRemaining.addAll(words);
     }
 
     // Método que retorna se ainda há palavras a serem digitadas

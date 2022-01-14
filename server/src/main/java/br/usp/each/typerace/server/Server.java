@@ -163,6 +163,7 @@ public class Server extends WebSocketServer {
         for (Player pl : rankedPl){
             broadcast((++i) + ") " + "Jogador " + pl.getId() + " : " + pl.getCorrect() + " corretas, " + pl.getWrong() + " erradas");
             pl.setCorrect(0); pl.setWrong(0); // Reseta pontuação dos jogadores para próxima partida
+            pl.copyWords(typeraceGame.getWords()); // Copia novas palavras
         }
         broadcast("========================================");
     }
