@@ -18,18 +18,22 @@ public class Player implements Comparable<Player> {
         this.wordsRemaining = words;
     }
 
+    // Método que retorna id do jogador
     public Integer getId(){
         return this.id;
     }
 
+    // Método que retorna quantidade de acertos do jogador
     public int getCorrect(){
         return this.correct;
     }
 
+    // Método que retorna quantidade de erros do jogador	
     public int getWrong(){
         return this.wrong;
     }
 
+    // Método que verifica se a palavra digitada está correta
     public boolean wordTyped(String word){
 
         if (wordsRemaining.contains(word)){
@@ -43,13 +47,14 @@ public class Player implements Comparable<Player> {
         return playerStatus();
     }
 
-    // status do jogador
+    // Método que retorna se ainda há palavras a serem digitadas
     public boolean playerStatus(){
 
         if (wordsRemaining.isEmpty()) return true;
         return false;
     }
 
+    // Para ordenar os jogadores por quantidade decrescente de acertos
     @Override
 	public int compareTo(Player pl) {
 		return Integer.compare(this.getCorrect(), pl.getCorrect());
